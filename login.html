@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitthavaja Airlines - Login</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <script>
+        // 1. SECURITY: If already logged in, go to Home
+        if (localStorage.getItem('currentUser')) {
+            window.location.replace("home.html");
+        }
+
+        // 2. THE LOGIN LOGIC
+        function validateLogin() {
+            // Get what the user typed
+            const enteredID = document.getElementById('uid').value.trim(); // Trim removes accidental spaces
+            const enteredPass = document.getElementById('pass').value.trim();
+
+            // Get the REAL data from Local Storage
+            const storedUser = localStorage.getItem('registeredUser');
+
+            if (!storedUser) {
+                alert("No user found! Please Register first.");
+                return;
+            }
+
+            // Convert text data back to real data
+            const userData = JSON.parse(storedUser);
+
+            // --- THE FIX IS HERE ---
+            // We must check against 'passengerId', NOT 'id'
+            if (enteredID !== String(userData.passengerId)) {
+                alert("Error: Incorrect User ID. (Your ID is: " + userData.passengerId + ")");
+                return;
+            }
+
+            // CHECK 2: Does the Password match?
+            if (enteredPass !== userData.password) {
+                alert("Error: Incorrect Password.");
+                return;
+            }
+
+            // SUCCESS!
+            // 1. Create the "Session Ticket"
+            localStorage.setItem('currentUser', userData.firstName); 
+            
+            // 2. Fly to the Dashboard
+            window.location.href = "home.html";
+        }
+    </script>
+</head>
+<body>
+
+    <div class="brand-section">
+        <h2 class="intro-text">YOUR JOURNEY AWAITS WITH</h2>
+        <h1 class="mega-brand">KAPITTHAVAJA</h1>
+        <p class="tagline">
+            "Once you have tasted flight, you will forever walk the earth with your eyes turned skyward."
+            <span class="author">— Leonardo da Vinci</span>
+        </p>
+    </div>
+
+    <div class="login-container">
+        <h2 class="login-title">WELCOME ABOARD</h2>
+        <p class="login-subtitle">Sign in to book flights & manage trips</p>
+
+        <form id="loginForm" onsubmit="event.preventDefault(); validateLogin()">
+            <div class="input-box">
+                <i class='bx bxs-user'></i>
+                <input type="number" id="uid" placeholder="User ID (Numeric)" required maxlength="5">
+            </div>
+            <div class="input-box">
+                <i class='bx bxs-lock-alt'></i>
+                <input type="password" id="pass" placeholder="Password" required minlength="6" maxlength="30">
+            </div>
+            
+            <button type="submit" class="btn">Start Journey</button>
+
+            <div class="register-link">
+                <p>First time flying with us?</p>
+                <a href="register.html" class="btn-register">Register Now</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
