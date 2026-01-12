@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitthavaja Airlines - Login</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <script>
+        // 1. SECURITY: If already logged in, go to Home
+        if (localStorage.getItem('currentUser')) {
+            window.location.replace("home.html");
+        }
+
+        // 2. THE LOGIN LOGIC
+        function validateLogin() {
+            // Get what the user typed
+            const enteredID = document.getElementById('uid').value.trim(); // Trim removes accidental spaces
+            const enteredPass = document.getElementById('pass').value.trim();
+
+            if (enteredID === "" || enteredPass === "") {
+                showAlert("Error: Please enter both User ID and Password.");
+                return;
+            }
+
+            if (!/^\d+$/.test(enteredID)) {
+                showAlert("Error: User ID must be numeric only (no letters).");
+                return;
+            }
+
+            // Get the REAL data from Local Storage
+            const storedUser = localStorage.getItem('registeredUser');
+
+            if (!storedUser) {
+                showAlert("No user found! Please Register first.");
+                return;
+            }
+
+            // Convert text data back to real data
+            const userData = JSON.parse(storedUser);
+
+            // --- THE FIX IS HERE ---
+            // We must check against 'passengerId', NOT 'id'
+            if (enteredID !== String(userData.passengerId)) {
+                showAlert("Error: Incorrect User ID. (Your ID is: " + userData.passengerId + ")");
+                return;
+            }
+
+            // CHECK 2: Does the Password match?
+            if (enteredPass !== userData.password) {
+                showAlert("Error: Incorrect Password.");
+                return;
+            }
+
+            // SUCCESS!
+            // 1. Create the "Session Ticket"
+            localStorage.setItem('currentUser', userData.firstName); 
+            
+            // 2. Fly to the Dashboard
+            window.location.href = "home.html";
+        }
+
+        function togglePassword(inputId, iconId) {
+            const inputField = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+
+            if (inputField.type === "password") {
+                // Switch to Text (Show)
+                inputField.type = "text";
+                icon.classList.remove('bx-hide');
+                icon.classList.add('bx-show');
+            } else {
+                 // Switch back to Password (Hide)
+                inputField.type = "password";
+                icon.classList.remove('bx-show');
+                icon.classList.add('bx-hide');
+            }
+     }
+
+     // --- CUSTOM ALERT FUNCTION ---
+        function showAlert(message) {
+    // 1. Set the message text
+            document.getElementById('alertMessage').innerText = message;
+    
+    // 2. Show the overlay
+            document.getElementById('customAlert').style.display = 'flex';
+        }
+
+// --- CLOSE ALERT FUNCTION ---
+        function closeCustomAlert() {
+            document.getElementById('customAlert').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+
+    <div class="brand-section">
+        <h2 class="intro-text">YOUR JOURNEY AWAITS WITH</h2>
+        <h1 class="mega-brand">KAPITTHAVAJA</h1>
+        <p class="tagline">
+            "Once you have tasted flight, you will forever walk the earth with your eyes turned skyward."
+        </p>
+    </div>
+
+    <div class="login-container">
+        <h2 class="login-title">WELCOME ABOARD</h2>
+        <p class="login-subtitle">Sign in to book flights & manage trips</p>
+
+        <form id="loginForm" onsubmit="event.preventDefault(); validateLogin()">
+            <div class="input-box">
+                <i class='bx bxs-user'></i>
+                <input type="number" id="uid" placeholder="User ID (Numeric)" required maxlength="5">
+            </div>
+            <div class="input-box">
+                <span class="details">Password</span>
+
+                <div class="password-wrapper">
+                <input type="password" id="pass" placeholder="Enter you password." required minlength="6" maxlength="30">
+                <i class='bx bx-hide toggle-icon' id="loginPassIcon" onclick="togglePassword('pass', 'loginPassIcon')"></i>
+            </div>
+            </div>
+            <button type="submit" class="btn">Start Journey</button>
+
+            <div class="register-link">
+                <p>First time flying with us?</p>
+                <a href="register.html" class="btn-register">Register Now</a>
+            </div>
+        </form>
+    </div>
+    <div id="customAlert" class="custom-alert-overlay" style="display: none;">
+        <div class="custom-alert-box">
+            <div class="alert-icon">
+                <i class='bx bxs-bell-ring'></i>
+            </div>
+            <h3 id="alertTitle">ATTENTION CAPTAIN</h3>
+            <p id="alertMessage">Message goes here...</p>
+            <button onclick="closeCustomAlert()">ROGER THAT</button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitthavaja Admin Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* --- LAYOUT FIXES --- */
+        
+        /* 1. Ensure body starts below the fixed navbar */
+        .admin-container { 
+            margin-top: 100px !important; 
+        }
+
+        /* 2. NAVBAR FIX: Prevents "Exit Portal" from shrinking/cutting off */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; /* Fixed height for consistency */
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between; /* Pushes Logo left, Links right */
+            align-items: center;
+            padding: 0 40px; /* 40px spacing on Left and Right edges */
+            box-sizing: border-box; /* Ensures padding doesn't break width */
+            backdrop-filter: blur(10px);
+        }
+
+        /* 3. Ensure links don't wrap weirdly */
+        .nav-links {
+            display: flex;
+            gap: 15px; /* Space between buttons */
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <i class='bx bxs-plane-alt'></i> Kapitthavaja Admin
+        </div>
+        <div class="nav-links">
+            <button onclick="showAdminSection('carrierSection')" class="active-btn" id="btnCarrier">Manage Carriers</button>
+            <button onclick="showAdminSection('flightSection')" id="btnFlight">Manage Flights</button>
+            
+            <button onclick="window.location.href='home.html'" class="logout-btn" style="background: rgba(255,0,0,0.2); border: 1px solid red; color: white; margin-left: 10px;">
+                <i class='bx bx-log-out'></i> Exit Portal
+            </button>
+        </div>
+    </nav>
+
+    <div class="admin-container" style="max-width: 1200px; margin: 100px auto 50px auto; padding: 20px;">
+
+        <div id="carrierSection" class="admin-tab-content">
+            
+            <div class="toggle-container">
+                <button onclick="switchMode('carrier', 'add')" class="toggle-btn active-mode" id="btnCarrierAdd">Add New</button>
+                <button onclick="switchMode('carrier', 'edit')" class="toggle-btn" id="btnCarrierEdit">Edit / Delete</button>
+            </div>
+
+            <div id="carrierAddWrapper">
+                <div class="form-card">
+                    <h2><i class='bx bxs-plane-alt'></i> Add New Carrier</h2>
+                    
+                    <form id="addCarrierForm" onsubmit="event.preventDefault(); registerCarrier();">
+                        
+                        <div class="form-group">
+                            <label>Carrier Name</label>
+                            <input type="text" id="carrierName" maxlength="50" placeholder="Enter Carrier Name (Max 50 chars)" required>
+                        </div>
+
+                        <div class="section-header">
+                            <h3>Discount Percentage</h3><hr class="styled-hr"> 
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="form-group"><label>30DaysAdvanceBooking</label><input type="number" id="disc30" placeholder="%" required></div>
+                            <div class="form-group"><label>60DaysAdvanceBooking</label><input type="number" id="disc60" placeholder="%" required></div>
+                            <div class="form-group"><label>90DaysAdvanceBooking</label><input type="number" id="disc90" placeholder="%" required></div>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="form-group"><label>BulkBooking</label><input type="number" id="discBulk" placeholder="%" required></div>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="form-group"><label>SilverUser</label><input type="number" id="discSilver" placeholder="%" required></div>
+                            <div class="form-group"><label>GoldUser</label><input type="number" id="discGold" placeholder="%" required></div>
+                            <div class="form-group"><label>PlatinumUser</label><input type="number" id="discPlatinum" placeholder="%" required></div>
+                        </div>
+
+                        <div class="section-header">
+                            <h3>Refund Percentage</h3><hr class="styled-hr"> 
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="form-group"><label>2DaysBeforeTravelDate</label><input type="number" id="ref2Days" placeholder="%" required></div>
+                            <div class="form-group"><label>10DaysBeforeTravelDate</label><input type="number" id="ref10Days" placeholder="%" required></div>
+                            <div class="form-group"><label>20DaysOrMoreBeforeTravelDate</label><input type="number" id="ref20Days" placeholder="%" required></div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">Add Carrier</button>
+                    </form>
+                    
+                    <div id="successMessage" class="success-box" style="display:none; margin-top: 20px; color: #4facfe; text-align: center;">
+                        <i class='bx bxs-check-circle'></i> Carrier Added Successfully!
+                    </div>
+                </div>
+            </div>
+
+            <div id="carrierEditWrapper" style="display: none;">
+                <div class="form-card">
+                    <h2><i class='bx bxs-edit'></i> Edit / Delete Carrier</h2>
+
+                    <div class="form-group">
+                        <label>CarrierName (Select Carrier)</label>
+                        <div style="display: flex; gap: 10px;">
+                            <select id="carrierSelect" style="flex:1; padding: 10px; border-radius: 5px; color: black;">
+                                <option value="">Select Carrier</option>
+                            </select>
+                            <button onclick="searchCarrier()" class="btn-action" style="background: #4facfe; border: none; padding: 10px 20px; color: white; border-radius: 5px;">Search</button>
+                        </div>
+                    </div>
+
+                    <div id="editFormContainer" style="display: none; margin-top: 20px; border-top: 1px solid #555; padding-top: 20px;">
+                        
+                        <div class="form-group">
+                            <label>CarrierName (Read Only)</label>
+                            <input type="text" id="edit_carrierName" readonly style="background: #444; color: #aaa; cursor: not-allowed;">
+                        </div>
+
+                        <div class="section-header"><h3>Discount Percentage</h3><hr class="styled-hr"></div>
+
+                        <div class="grid-row">
+                            <div class="form-group"><label>60DaysAdvanceBooking</label><input type="number" id="edit_disc60"></div>
+                            <div class="form-group"><label>90DaysAdvanceBooking</label><input type="number" id="edit_disc90"></div>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="form-group"><label>BulkBooking</label><input type="number" id="edit_discBulk"></div>
+                            <div class="form-group"><label>SilverUser</label><input type="number" id="edit_discSilver"></div>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="form-group"><label>GoldUser</label><input type="number" id="edit_discGold"></div>
+                            <div class="form-group"><label>PlatinumUser</label><input type="number" id="edit_discPlatinum"></div>
+                        </div>
+
+                        <div class="section-header"><h3>Refund Percentage</h3><hr class="styled-hr"></div>
+
+                        <div class="grid-row">
+                            <div class="form-group"><label>2DaysBeforeTravelDate</label><input type="number" id="edit_ref2Days"></div>
+                            <div class="form-group"><label>10DaysBeforeTravelDate</label><input type="number" id="edit_ref10Days"></div>
+                            <div class="form-group"><label>20DaysOrMoreBeforeTravelDate</label><input type="number" id="edit_ref20Days"></div>
+                        </div>
+
+                        <div style="display: flex; gap: 20px; margin-top: 30px;">
+                            <button onclick="updateCarrier()" class="btn-submit" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #000;">Edit Carrier</button>
+                            <button onclick="deleteCarrier()" class="btn-submit" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #000;">Delete Carrier</button>
+                        </div>
+
+                    </div>
+                    <div id="editMessage" class="success-box" style="display:none; margin-top: 20px; text-align: center; font-weight: bold;"></div>
+                </div>
+            </div>
+
+        </div> 
+        <div id="flightSection" class="admin-tab-content" style="display: none;">
+            
+            <div class="toggle-container">
+                <button onclick="switchMode('flight', 'add')" class="toggle-btn active-mode" id="btnFlightAdd">Add New</button>
+                <button onclick="switchMode('flight', 'edit')" class="toggle-btn" id="btnFlightEdit">Edit / Delete</button>
+            </div>
+
+            <div id="flightAddWrapper">
+                <div class="form-card">
+                    <h2><i class='bx bxs-plane-take-off'></i> Add Flight Details</h2>
+                    
+                    <form id="addFlightForm" onsubmit="event.preventDefault(); addFlight();">
+                        
+                        <div class="form-group">
+                            <label>CarrierName</label>
+                            <select id="flightCarrierSelect" required style="padding: 10px; border-radius: 5px; color: black;">
+                                <option value="">Select Carrier</option>
+                            </select>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="form-group">
+                                <label>Origin</label>
+                                <select id="flightOrigin" required style="padding: 10px; border-radius: 5px; color: black;">
+                                    <option value="">Select Origin</option>
+                                    <option value="Mumbai">Mumbai</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Chennai">Chennai</option>
+                                    <option value="New York">New York</option>
+                                    <option value="London">London</option>
+                                    <option value="Dubai">Dubai</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Destination</label>
+                                <select id="flightDestination" required style="padding: 10px; border-radius: 5px; color: black;">
+                                    <option value="">Select Destination</option>
+                                    <option value="Mumbai">Mumbai</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Chennai">Chennai</option>
+                                    <option value="New York">New York</option>
+                                    <option value="London">London</option>
+                                    <option value="Dubai">Dubai</option>
+                                </select>
+                            </div>
+                        </div>  
+                
+                        <div class="form-group">
+                            <label>AirFare</label>
+                            <input type="number" id="airFare" placeholder="Enter Amount" required>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="form-group">
+                                <label>SeatCapacityBusinessClass</label>
+                                <input type="number" id="seatBusiness" placeholder="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>SeatCapacityEconomyClass</label>
+                                <input type="number" id="seatEconomy" placeholder="0" required>
+                            </div>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="form-group">
+                                <label>SeatCapacityExecutiveClass</label>
+                                <input type="number" id="seatExecutive" placeholder="0" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">Add Flight</button>
+                    </form>
+                    
+                    <div id="flightSuccessMessage" class="success-box" style="display:none; margin-top: 20px; color: #4facfe; text-align: center; font-weight: bold;"></div>
+                </div>
+            </div>
+
+            <div id="flightEditWrapper" style="display: none;">
+                <div class="form-card">
+                    <h2><i class='bx bxs-plane-alt'></i> Edit / Delete Flight Details</h2>
+
+                    <div class="section-header"><h3>Search Flight</h3><hr class="styled-hr"></div>
+
+                    <div class="form-group">
+                        <label>CarrierName</label>
+                        <select id="search_flightCarrier">
+                            <option value="">Select Carrier</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Origin</label>
+                        <select id="search_flightOrigin" style="padding: 10px; border-radius: 5px; color: black;">
+                            <option value="">Select Origin</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="New York">New York</option>
+                            <option value="London">London</option>
+                            <option value="Dubai">Dubai</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Destination</label>
+                        <select id="search_flightDest" style="padding: 10px; border-radius: 5px; color: black;">
+                            <option value="">Select Destination</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="New York">New York</option>
+                            <option value="London">London</option>
+                            <option value="Dubai">Dubai</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="searchFlightsForEdit()" class="btn-action" style="background: #4facfe; margin-top: 20px; border: none; padding: 10px 20px; color: white; border-radius: 5px; cursor: pointer;">Search</button>
+
+                    <div id="flightResultsArea" style="display: none; margin-top: 20px;">
+                        <h3>Search Results</h3>
+                        <table style="width: 100%; border-collapse: collapse; color: white; background: rgba(0,0,0,0.3);">
+                            <thead>
+                                <tr style="background: rgba(255,255,255,0.1); border-bottom: 1px solid white;">
+                                    <th style="padding: 10px;">Flight ID</th>
+                                    <th style="padding: 10px;">Carrier</th>
+                                    <th style="padding: 10px;">Origin</th>
+                                    <th style="padding: 10px;">Dest</th>
+                                    <th style="padding: 10px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="flightTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="flightEditFormContainer" style="display: none; margin-top: 30px; border-top: 2px dashed #555; padding-top: 20px;">
+                
+                        <h3>Update Details</h3>
+
+                        <div class="form-group">
+                            <label>CarrierName (Not Editable)</label>
+                            <input type="text" id="update_carrier" readonly style="background: #444; color: #aaa; cursor: not-allowed;">
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="form-group"><label>Origin</label><input type="text" id="update_origin"></div>
+                            <div class="form-group"><label>Destination</label><input type="text" id="update_dest"></div>
+                        </div>
+
+                        <div class="form-group"><label>AirFare</label><input type="number" id="update_fare"></div>
+
+                        <div class="grid-row">
+                            <div class="form-group"><label>SeatCapacityBusinessClass</label><input type="number" id="update_seatBus"></div>
+                            <div class="form-group"><label>SeatCapacityEconomyClass</label><input type="number" id="update_seatEco"></div>
+                        </div>
+                        <div class="grid-row"><div class="form-group"><label>SeatCapacityExecutiveClass</label><input type="number" id="update_seatExec"></div></div>
+                        
+                        <div style="display: flex; gap: 20px; margin-top: 20px;">
+                            <button onclick="saveFlightUpdates()" class="btn-submit" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #000;">Edit Flight</button>
+                            <button onclick="removeFlight()" class="btn-submit" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #000;">Delete Flight</button>
+                        </div>
+
+                        <div id="flightUpdateMsg" class="success-box" style="display:none; margin-top: 20px; text-align: center; font-weight: bold;"></div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
