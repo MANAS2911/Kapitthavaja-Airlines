@@ -1,0 +1,1760 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+body {
+    /* Cinematic Background */
+    background: linear-gradient(135deg, rgba(15, 32, 39, 0.9), rgba(32, 58, 67, 0.85)), 
+                url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 40px; /* Adjusted padding */
+    font-family: 'Poppins', sans-serif;
+    color: white; 
+    padding-bottom: 120px;
+}
+
+/* --- TEXT & HEADERS --- */
+.welcome-header {
+    font-size: 50px;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 4px 10px rgba(0,0,0,0.5);
+    animation: slideDown 1s ease-out;
+    margin-bottom: 20px;
+}
+
+/* --- GLASS CONTAINERS --- */
+/* 1. Login Box (Narrower) */
+.login-container {
+    width: 380px;
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    animation: slideUp 1s ease-out;
+    text-align: center;
+}
+
+/* 2. Registration Box (Wider for 2 columns) */
+.register-container {
+    width: 600px; /* Wider */
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    animation: slideUp 1s ease-out;
+}
+
+/* --- FORM LAYOUTS --- */
+.form-row {
+    display: flex;
+    gap: 15px; /* Space between side-by-side inputs */
+}
+.form-row .input-box {
+    flex: 1; /* Makes them equal width */
+    margin: 10px 0; /* Tighter spacing for registration */
+}
+
+/* --- INPUT FIELDS --- */
+.input-box {
+    position: relative;
+    width: 100%;
+    margin: 15px 0;
+}
+.input-box input {
+    width: 100%;
+    padding: 12px 20px 12px 45px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    outline: none;
+    border-radius: 50px;
+    color: white;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    transition: 0.3s;
+    box-sizing: border-box; 
+}
+.input-box input:focus {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: #4facfe;
+    box-shadow: 0 0 10px rgba(79, 172, 254, 0.4);
+}
+.input-box input::placeholder { color: rgba(255, 255, 255, 0.6); }
+
+/* Icons */
+.input-box i {
+    position: absolute;
+    left: 18px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 19px;
+    color: #4facfe;
+    line-height: 1;
+    margin-top: -1px; /* Micro adjustment */
+}
+
+/* --- BUTTONS --- */
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+.btn {
+    width: 100%;
+    height: 48px;
+    background: linear-gradient(to right, #00f2fe, #4facfe);
+    border: none; border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px; font-weight: 700; color: #003;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+}
+.btn:hover { transform: scale(1.03); box-shadow: 0 8px 25px rgba(79, 172, 254, 0.6); }
+
+/* Secondary Button (Reset) */
+.btn-secondary {
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.3);
+    color: white;
+    box-shadow: none;
+}
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: white;
+}
+
+/* --- LINKS --- */
+.register-link { margin-top: 20px; text-align: center; }
+.btn-text { color: #4facfe; text-decoration: none; font-weight: 600; }
+.btn-text:hover { color: white; text-decoration: underline; }
+
+/* Existing Login Button styles for Home/Register links */
+.btn-register {
+    display: block; width: 120px; margin: 10px auto;
+    height: 35px; line-height: 35px;
+    background: transparent; border: 1px solid rgba(255,255,255, 0.5);
+    color: white; border-radius: 50px; text-align: center;
+    text-decoration: none; font-size: 13px; transition: 0.3s;
+}
+.btn-register:hover { background: white; color: #0f2027; }
+
+/* Success Box */
+.success-box {
+    background: rgba(79, 172, 254, 0.2);
+    border: 1px solid #4facfe;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* --- DASHBOARD SPECIFIC STYLES --- */
+
+/* 1. GLASS NAVBAR */
+.navbar {
+    width: 90%;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.1); /* Glass */
+    backdrop-filter: blur(15px);
+    border-radius: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    margin-top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4facfe; /* Electric Blue */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-links button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    margin-left: 20px;
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: 0.3s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.nav-links button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #4facfe;
+}
+
+.active-btn {
+    background: #4facfe !important;
+    color: #0f2027 !important; /* Dark text on active */
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.5);
+}
+
+.logout-btn:hover {
+    color: #ff4b4b !important; /* Red hover for logout */
+}
+
+/* 2. MAIN CONTENT AREA */
+.main-content {
+    width: 95%; /* Use almost full width */
+    max-width: 1400px; /* Allow it to stretch wide */
+    margin-top: 40px;
+    text-align: center;
+}
+
+/* 3. HOME DASHBOARD CARDS */
+.dashboard-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.card {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    padding: 30px;
+    border-radius: 20px;
+    width: 200px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    background: rgba(79, 172, 254, 0.2);
+    box-shadow: 0 0 25px rgba(79, 172, 254, 0.4);
+}
+
+.card i { font-size: 40px; color: #4facfe; margin-bottom: 15px; }
+.card h3 { margin: 0; font-size: 18px; }
+.card p { font-size: 13px; color: #aaa; margin-top: 5px; }
+
+/* 4. PASSPORT PROFILE CARD */
+.passport-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0; /* No padding on container */
+    overflow: hidden;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.passport-header {
+    background: #0f2027;
+    padding: 15px 30px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border-bottom: 2px solid #4facfe;
+    display: flex; align-items: center; gap: 10px;
+}
+
+.passport-body {
+    display: flex;
+    padding: 30px;
+    gap: 30px;
+    align-items: center;
+}
+
+.detail-row {
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 5px;
+}
+
+.detail-row span {
+    display: block;
+    font-size: 11px;
+    color: #4facfe;
+    text-transform: uppercase;
+}
+
+.data-field {
+    font-size: 16px;
+    color: white;
+    font-weight: 500;
+    padding: 5px;
+}
+
+/* This class activates when you click "Edit" */
+.editable-field {
+    border: 1px solid #4facfe;
+    background: rgba(0,0,0,0.3);
+    border-radius: 5px;
+    padding: 5px 10px;
+    outline: none;
+    box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+}
+
+.passport-footer {
+    padding: 20px;
+    text-align: right;
+    background: rgba(0,0,0,0.2);
+}
+
+.btn-action {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.btn-action:hover {
+    background: rgba(255,255,255,0.1);
+}
+.btn-save {
+    background: #4facfe;
+    border: none;
+    color: #0f2027;
+    font-weight: 700;
+    margin-left: 10px;
+}
+.btn-save:hover {
+    background: white; 
+    box-shadow: 0 0 15px #4facfe; 
+}
+
+/* 5. BOARDING PASS TICKET */
+.boarding-pass {
+    width: 440px;              /* WIDER: Fits long city names easily */
+    height: 250px;             /* TALLER: Room for Date, Gate, and Flight No */
+    
+    border-radius: 30px;
+    display: flex;
+    flex: 0 0 auto;            /* Rigid size */
+    background: white;
+    color: #333;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+    margin-bottom: 20px;
+    cursor: pointer;
+    position: relative;        /* Helps with positioning */
+}
+
+.boarding-pass:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+}
+
+.pass-left {
+    width: 70%;
+    padding: 25px;             /* More internal space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Spreads flight info out nicely */
+}
+
+.pass-right {
+    width: 30%;                /* Takes up 30% of the card */
+    background: #4facfe;       /* Your Theme Blue */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-left: 2px dashed rgba(255,255,255,0.3); /* The "Tear-off" line effect */
+}
+
+.flight-route {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+.flight-route i { color: #4facfe; font-size: 30px; transform: rotate(90deg); }
+
+.flight-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+.flight-details span { color: #888; font-weight: bold; }
+
+.section-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #4facfe;
+}
+
+/* Animations */
+@keyframes slideDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- PREMIUM TAB SWITCHES --- */
+.trip-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 50px;
+    display: inline-flex; /* Shrinks container to fit buttons */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 10px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.3s;
+    letter-spacing: 1px;
+}
+
+.tab-btn:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* The "Active" Glow Effect */
+.active-tab {
+    background: #4facfe !important; /* Electric Blue */
+    color: #0f2027 !important; /* Dark Text */
+    box-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
+    transform: scale(1.05);
+}
+
+/* --- LIST SPACING --- */
+.trip-list {
+    display: flex;             /* Keeps them side-by-side */
+    flex-direction: row;
+    flex-wrap: wrap;           /* Wraps if screen is small */
+    justify-content: center;   /* Centers them nicely */
+    gap: 40px;                 /* INCREASED: More breathing room between cards */
+    width: 100%;
+    padding: 40px 20px;        /* Adds space top/bottom so shadows don't get cut off */
+}
+
+/* Hide scrollbar for Chrome, Safari, and Opera */
+.trip-list::-webkit-scrollbar {
+    display: none;
+}
+
+.cancelled-pass .pass-left {
+    opacity: 0.7; /* Faded look */
+    background: #fff0f0; /* Slight reddish tint */
+}
+
+/* Completed Ticket Style */
+.completed-pass .pass-left {
+    opacity: 0.6; /* Greyed out look */
+    background: #e9ecef;
+}
+
+/* --- CUSTOM DROPDOWN (SLIDER) STYLES --- */
+.search-form {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-btn {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+
+    box-sizing: border-box;
+}
+
+.dropdown-content {
+    display: none; /* Hidden by default */
+    position: absolute;
+    background: rgba(15, 32, 39, 0.95); /* Dark background */
+    width: 100%;
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 15px;
+    z-index: 1000;
+    margin-top: 5px;
+    
+    /* THE SLIDER LOGIC */
+    max-height: 150px; 
+    overflow-y: auto;  
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Scrollbar Styling */
+.dropdown-content::-webkit-scrollbar { width: 8px; }
+.dropdown-content::-webkit-scrollbar-thumb { background: #4facfe; border-radius: 4px; }
+.dropdown-content::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
+
+.dropdown-content div {
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #ccc;
+    font-size: 14px;
+}
+
+.dropdown-content div:hover {
+    background: rgba(79, 172, 254, 0.2);
+    color: white;
+    padding-left: 25px; /* Slide effect */
+    transition: 0.2s;
+}
+
+.show { display: block; }
+
+/* --- FIX FOR DROPDOWN ARROW OVERLAP --- */
+.dropdown-btn i {
+    position: static !important; /* Force it to NOT be absolute */
+    transform: none !important;  /* Remove the vertical centering shift */
+    margin-left: auto;           /* Push it to the far right if flex spacing fails */
+}
+
+/* --- CINEMATIC TYPOGRAPHY UPGRADE --- */
+
+/* 1. Container for the big text */
+.brand-section {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeInDown 1s ease-out;
+}
+
+/* 2. The Main Headline (Montserrat Font) */
+.mega-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 60px; /* Huge Impact */
+    font-weight: 900; /* Extra Bold */
+    text-transform: uppercase;
+    letter-spacing: 2px; /* Cinematic spacing */
+    margin: 0;
+    line-height: 1.1;
+    color: white;
+    
+    /* The "Gradient Text" Trick */
+    background: linear-gradient(to right, #ffffff, #a1c4fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    /* Glow */
+    text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* 3. The highlighted word "SKIES" */
+.highlight-text {
+    color: #4facfe; /* Electric Blue Fallback */
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 4. The Tagline below title */
+.tagline {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 10px;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+/* --- UPDATED LOGIN CARD TEXT --- */
+.login-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.login-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 25px;
+    margin-top: 0;
+}
+
+.intro-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 400;       /* Light and elegant */
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 6px;    /* Very wide spacing looks premium */
+    text-transform: uppercase;
+    margin-bottom: -10px;   /* Pulls it closer to the big name */
+}
+
+.mega-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 75px;        /* Massive Size */
+    font-weight: 900;       /* Extra Bold */
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1.2;
+    
+    /* The Electric Blue Gradient */
+    background: linear-gradient(to right, #ffffff, #4facfe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    /* Glow Effect */
+    filter: drop-shadow(0 0 15px rgba(79, 172, 254, 0.4));
+}
+
+.tagline {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 15px;
+    font-style: italic;
+    font-weight: 300;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: flex-end; /* Pushes everything to the right corner */
+    margin-bottom: 30px;       /* Spacing below header */
+}
+
+/* The Glass Box containing user info */
+.user-profile-box {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15); /* Glass Effect Background */
+    backdrop-filter: blur(12px);           /* Blur underneath */
+    padding: 10px 25px;
+    border-radius: 50px;                   /* Pill shape */
+    border: 1px solid rgba(255, 255, 255, 0.25); /* Subtle border */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* Soft shadow */
+}
+
+/* Text Alignment */
+.user-details {
+    text-align: right;
+    margin-right: 15px;
+}
+
+/* User Name Style */
+.header-name {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* Status/Miles Style */
+.header-status {
+    display: block;
+    font-size: 0.85rem;
+    color: #e0e0e0; /* Slightly lighter color */
+    margin-top: 3px;
+}
+
+/* Icon Style */
+.header-icon {
+    font-size: 45px;
+    color: #4facfe; /* Your brand's blue glow color */
+}
+
+/* --- REMOVE NUMBER SPINNERS (The Arrows) --- */
+/* For Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* --- PASSWORD TOGGLE WRAPPER --- */
+/* --- FIX FOR PASSWORD EYE ICON --- */
+.password-wrapper {
+    position: relative; /* Keeps the icon trapped inside this box */
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px; /* IMPORTANT: Leaves space for the icon on the right */
+    box-sizing: border-box; /* Ensures padding doesn't break the width */
+}
+
+.toggle-icon {
+    position: absolute;
+    right: 10px;        /* Stick to the RIGHT side only */
+    top: 50%;           /* Center vertically */
+    transform: translateY(-50%);
+    
+    width: 25px;        /* CRITICAL: Force the icon to be small */
+    height: 25px;       /* CRITICAL: Force the icon to be small */
+    line-height: 25px;
+    text-align: center;
+    
+    cursor: pointer;
+    z-index: 10;
+    color: #666;
+}
+
+/* --- DASHBOARD FOOTER STYLE --- */
+/* --- FIXED BOTTOM FOOTER --- */
+/* --- FIXED "HUD" FOOTER --- */
+/* --- FIXED "HUD" FOOTER (Color Corrected) --- */
+.dashboard-footer {
+    position: fixed; 
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+
+    width: 98%;
+    max-width: 1600px;
+    
+    /* THE FIX: Pure Neutral Black with Transparency */
+    /* OLD: background: rgba(15, 23, 42, 0.85); (Too Blue) */
+    background: rgba(0, 0, 0, 0.6); 
+    
+    /* Stronger Blur to blend it seamlessly */
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    
+    /* Lighter border to match the top Navbar */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* Highlight on top edge */
+    
+    border-radius: 20px;
+    padding: 20px 50px;
+    color: white;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
+}
+
+.footer-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    flex-wrap: wrap; /* responsive wrapping */
+}
+
+.footer-left {
+    flex: 1; /* Takes up left space */
+    text-align: left;
+}
+/* Left Section */
+.footer-left h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.footer-left .highlight { color: #4facfe; }
+
+.footer-left p {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 5px;
+}
+
+/* Center Links */
+.footer-center {
+    flex: 2; /* Takes up DOUBLE space (Centerpiece) */
+    display: flex;
+    flex-direction: column; /* Forces vertical stacking */
+    align-items: center;      /* Centers everything horizontally */
+    gap: 15px;                /* Gap between Top Row and Bottom Row */
+}
+
+.footer-center a {
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    transition: 0.3s;
+    opacity: 0.8;
+}
+
+.footer-center a:hover {
+    color: #4facfe; /* Glow blue on hover */
+    opacity: 1;
+}
+
+/* Right Social Icons */
+.footer-right {
+    flex: 1; /* Takes up right space */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Aligns to right edge */
+    gap: 15px;
+}
+
+.footer-right span {
+    font-size: 12px;
+    margin-bottom: 5px;
+    opacity: 0.7;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons i {
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.social-icons i:hover {
+    color: #4facfe;
+    transform: translateY(-3px); /* Float up effect */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    .footer-right {
+        align-items: center;
+    }
+}
+
+/* --- CUSTOM DROPDOWN STYLE --- */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-btn {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 50px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-content {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    background: rgba(20, 30, 48, 0.95); /* Dark background */
+    border-radius: 15px;
+    overflow: hidden;
+    z-index: 100;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.dropdown-content div {
+    padding: 12px 20px;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.dropdown-content div:hover {
+    background: #4facfe; /* Blue highlight on hover */
+}
+
+/* --- CANCEL BUTTON STYLE --- */
+.cancel-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid white;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.cancel-btn:hover {
+    background: white;
+    color: #ff4b4b; /* Turns red on hover */
+}
+
+#travellers::-webkit-outer-spin-button,
+#travellers::-webkit-inner-spin-button {
+    -webkit-appearance: auto; /* This brings the arrows back */
+    margin: 0; 
+}
+
+/* --- CUSTOM ALERT (The Overlay) --- */
+.custom-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Dark background behind the box */
+    backdrop-filter: blur(5px);     /* Blurs the website behind */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;                  /* Sits on top of EVERYTHING */
+}
+
+/* --- THE ALERT BOX --- */
+.custom-alert-box {
+    background: rgba(20, 30, 48, 0.95);
+    width: 400px;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    animation: popIn 0.3s ease;     /* Cool entrance animation */
+}
+
+/* Icon Styling */
+.alert-icon i {
+    font-size: 50px;
+    color: #4facfe;                 /* Your theme blue */
+    margin-bottom: 15px;
+}
+
+/* Text Styling */
+.custom-alert-box h3 {
+    color: white;
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+.custom-alert-box p {
+    color: #ccc;
+    font-size: 14px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* The Button */
+.custom-alert-box button {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border: none;
+    padding: 12px 30px;
+    color: white;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.custom-alert-box button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(79, 172, 254, 0.4);
+}
+
+/* Pop In Animation */
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* --- ADMIN FORM STYLES --- */
+.admin-container {
+    background: rgba(255, 255, 255, 0.1); /* Glass effect */
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+/* --- UPDATED FORM CARD FOR MORE SPACE --- */
+.form-card {
+    
+    /* MORE PADDING = More Vertical/Horizontal Breathing Room */
+    padding: 25px; 
+    
+    /* FORCES the card to be at least this tall visually */
+    min-height: 50vh; 
+    
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    color: white;
+    
+    /* Ensures content is centered if the form is short */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+
+.form-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.section-header h3 {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #4facfe; /* Theme Blue */
+}
+
+/* The HR Ruler Requirement */
+.styled-hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(255, 255, 255, 0.75), rgba(0, 0, 0, 0));
+    margin-bottom: 20px;
+}
+
+.grid-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: #ccc;
+}
+
+.form-group input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background: rgba(0,0,0,0.5);
+    color: white;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* --- EXTRA STYLES FOR US 002, 004, 005 --- */
+
+/* 1. The Success Message Box */
+.success-box {
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.6); /* Dark semi-transparent background */
+    border-left: 5px solid #43e97b; /* Green accent line */
+    color: #43e97b;
+    font-weight: bold;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* 2. Tables (For Flight Search Results in US004 & US005) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.05); /* Very subtle glass background */
+    border-radius: 8px;
+    overflow: hidden; /* Ensures corners stay rounded */
+}
+
+th {
+    background: rgba(255, 255, 255, 0.1); /* Slightly lighter header */
+    color: #4facfe; /* Theme Blue */
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Thin dividers */
+    color: white;
+    font-size: 13px;
+}
+
+/* Hover effect on table rows */
+tr:hover td {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* 3. Action Buttons (The small 'Search' or 'Delete' buttons) */
+.btn-action {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Animation for messages appearing */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- SUB-TAB TOGGLE SWITCH STYLES --- */
+.toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px;
+    border-radius: 30px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toggle-btn {
+    padding: 10px 30px;
+    border: none;
+    background: transparent;
+    color: #aaa;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+    color: white;
+}
+
+/* The Active State (White Pill) */
+.toggle-btn.active-mode {
+    background: #4facfe; /* Theme Blue */
+    color: white;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+}
+
+/* --- CUSTOM DROPDOWN THEME FOR ADMIN --- */
+
+/* 1. Target all Select boxes in the Admin Container */
+/* --- CUSTOM DROPDOWN THEME FOR ADMIN --- */
+
+/* 1. Target all Select boxes in the Admin Container */
+/* --- CUSTOM DROPDOWN THEME FOR ADMIN (Updated for Visibility) --- */
+
+/* 1. Target all Select boxes in the Admin Container */
+/* --- CUSTOM DROPDOWN THEME FOR ADMIN (Final Fix for Overlap) --- */
+
+.admin-container select {
+    width: 100%;
+    /* Top: 12px, Right: 45px (Safety Space), Bottom: 12px, Left: 15px */
+    padding: 12px 45px 12px 15px; 
+    border-radius: 5px;
+    
+    /* THEME: Dark Glass Effect */
+    background-color: rgba(0, 0, 0, 0.6); 
+    color: white !important; 
+    
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    
+    /* Prevents text from touching the arrow */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+
+    /* Hide default arrow */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    
+    /* Custom White Arrow */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+    
+    transition: all 0.3s ease;
+}
+
+/* 2. Hover Effect */
+.admin-container select:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: #4facfe;
+}
+
+/* 3. Focus Effect (When clicked) */
+.admin-container select:focus {
+    outline: none;
+    border-color: #4facfe;
+    box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+    color: white !important; /* Ensures text stays white when typing/selecting */
+}
+
+/* 4. Style the Dropdown Options (The list that pops up) */
+.admin-container select option {
+    background-color: #222 !important; /* Solid dark background */
+    color: white !important; /* Solid white text */
+    padding: 10px;
+}
+
+/* --- SPECIFIC FIX FOR "EDIT / DELETE" BOXES ONLY --- */
+
+/* Targets ONLY the Flight Edit Section */
+#flightEditWrapper .form-card {
+    /* 1. Fix Vertical Height: Shrink to fit content (removes the empty space) */
+    min-height: auto !important; 
+    
+    /* 2. Fix Horizontal Width: Force it to use 100% of the available width */
+    width: 100%;
+    
+    /* 3. Adjust Padding: Tighter padding makes it look compact & wider */
+    padding: 40px;
+}
+
+/* 1. Ensure the outer container allows full width */
+#carrierSection {
+    width: 100%;
+    max-width: 100%; /* Removes restriction from the main tab */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 2. Force the Edit Box to be BIGGER */
+#carrierEditWrapper .form-card {
+    /* Horizontal: Set a fixed large width so text fits easily */
+    width: 850px;      /* Significantly wider than before */
+    max-width: 95%;    /* Prevents scrollbar on small screens */
+    
+    /* Vertical: Force it to be tall, but allow growing */
+    min-height: 600px; /* Starts tall */
+    height: auto;      /* Grows if you add more content */
+    
+    /* Centering & Spacing */
+    margin: 30px auto; /* Centers the box horizontally */
+    padding: 50px;     /* Adds large internal space around text */
+    box-sizing: border-box;
+}
+
+/* --- FIX FOR OVERFLOWING FLIGHT DETAILS DROPDOWNS --- */
+
+/* This targets ALL select dropdowns inside the Flight Edit section */
+#flightEditWrapper .form-group select {
+    /* Force the element to be exactly 100% of its parent's width */
+    width: 80%;
+    
+    /* Ensure it never grows larger than its parent */
+    max-width: 80%;
+    
+    /* Crucial: Makes sure padding is included in the width calculation,
+       preventing it from pushing the bounds out. */
+    box-sizing: border-box;
+}
+
+.alliance-tag {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+.copyright {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* --- CENTER CONTENT (The Fix) --- */
+
+/* ROW 1: Main Nav */
+.footer-nav {
+    display: flex;
+    gap: 30px; /* Big space between main links */
+}
+
+.footer-nav a {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+    text-transform: uppercase; /* Looks more like a menu */
+    letter-spacing: 0.5px;
+}
+
+.footer-nav a:hover { color: #4facfe; transform: translateY(-2px); }
+
+/* ROW 2: Legal/Utility */
+.footer-legal {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.footer-legal a {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5); /* Muted color */
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.footer-legal a:hover { color: #fff; }
+
+.separator {
+    color: rgba(255, 255, 255, 0.1);
+    font-size: 10px;
+}
+
+/* --- RIGHT CONTENT --- */
+.support-label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #4facfe;
+    letter-spacing: 1px;
+    text-align: right;
+    margin-bottom: 2px;
+}
+
+.support-phone {
+    font-family: 'Montserrat', sans-serif; /* Clean font for numbers */
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons i {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.6);
+    transition: 0.3s;
+}
+
+.social-icons i:hover { color: #4facfe; transform: scale(1.1); }
+
+/* --- RESPONSIVE FIX --- */
+@media (max-width: 1024px) {
+    .dashboard-footer {
+        padding: 30px 20px;
+    }
+    .footer-container {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+    .footer-left, .footer-right {
+        align-items: center;
+        text-align: center;
+    }
+    .footer-nav { gap: 15px; flex-wrap: wrap; justify-content: center; }
+}
+
+/* Add this to your body or main dashboard container */
+.dashboard-container {
+    padding-bottom: 180px; /* Creates empty space so content can scroll ABOVE the footer */
+}
+
+.dropdown-trigger {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 12px 15px;
+    color: white;
+    cursor: pointer;
+    
+    /* Layout: Text left, Arrow right */
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.dropdown-trigger i {
+    color: #4facfe; /* Bright Blue - Visible against dark background */
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.dropdown-trigger:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #4facfe;
+}
+
+.custom-dropdown.active .dropdown-trigger i {
+    transform: rotate(180deg);
+}
+
+/* The Dropdown List (Hidden) */
+.dropdown-options {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    background: #0f172a; 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    z-index: 9999;
+    
+    /* --- THE FIX IS HERE --- */
+    
+    /* 1. Limit Height to approx 2 items (60px per item x 2 = 120px) */
+    max-height: 120px; 
+    
+    /* 2. Enable the Scrollbar */
+    overflow-y: auto;
+}
+
+.dropdown-options::-webkit-scrollbar {
+    width: 6px; /* Thin and sleek */
+}
+
+.dropdown-options::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05); /* Track color */
+    border-radius: 10px;
+}
+
+.dropdown-options::-webkit-scrollbar-thumb {
+    background: #4facfe; /* Blue handle to match your theme */
+    border-radius: 10px;
+}
+
+/* Show the list when active */
+.dropdown-options.active {
+    display: block;
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* The Individual Options */
+.option-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.2s;
+    display: flex;
+    flex-direction: column; /* Stack name and desc vertically */
+}
+
+.option-item:last-child { border-bottom: none; }
+
+.option-item:hover {
+    background: rgba(79, 172, 254, 0.2); /* Blue highlight on hover */
+}
+
+.class-name { font-size: 14px; font-weight: 600; color: white; }
+.class-desc { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+/* --- OFFERS SECTION STYLING --- */
+.offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+    padding-bottom: 50px; /* Space for scrolling */
+}
+
+/* Base Card Style */
+.offer-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+    transition: 0.3s;
+    backdrop-filter: blur(10px);
+}
+
+.offer-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Color Themes */
+.offer-card.gold { border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.1); }
+.offer-card.blue { border-color: #4facfe; box-shadow: 0 0 20px rgba(79, 172, 254, 0.1); }
+.offer-card.purple { border-color: #a18cd1; box-shadow: 0 0 20px rgba(161, 140, 209, 0.1); }
+
+/* Badge (Top Right Corner) */
+.offer-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 15px;
+    border-bottom-left-radius: 15px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+.offer-card.gold .offer-badge { background: #ffd700; color: black; }
+.offer-card.blue .offer-badge { background: #4facfe; color: white; }
+
+/* Content Typography */
+.offer-content h3 { font-size: 22px; margin-bottom: 10px; }
+.offer-content p { font-size: 13px; color: rgba(255, 255, 255, 0.6); margin-bottom: 20px; line-height: 1.6; }
+
+/* Promo Code Box */
+.promo-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.code {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: white;
+}
+
+.promo-box button {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.2s;
+}
+.promo-box button:hover { color: #4facfe; transform: scale(1.1); }
+
+.expiry { font-size: 11px; color: rgba(255, 255, 255, 0.3); font-style: italic; margin: 0; }
+
+/* --- CHECK-IN KIOSK STYLING --- */
+
+.checkin-kiosk-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: rgba(0, 0, 0, 0.6); /* Darker glass for focus */
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 50px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+/* 1. Progress Bar */
+.kiosk-progress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+    opacity: 0.9;
+}
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.5);
+}
+.step.active { color: #4facfe; }
+.step-circle {
+    width: 35px; height: 35px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+}
+.step.active .step-circle {
+    border-color: #4facfe;
+    background: rgba(79, 172, 254, 0.2);
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
+}
+.step-line {
+    width: 80px; height: 2px;
+    background: rgba(255,255,255,0.1);
+    margin: 0 15px;
+    margin-bottom: 25px; /* Align with circle */
+}
+
+/* 2. Form Inputs */
+.form-row {
+    display: flex;
+    justify-content: space-between; /* Pushes them apart */
+    gap: 20px; /* Adds the empty space in the middle */
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.input-wrapper {
+    flex: 1; /* Ensures both take up equal 50% width */
+    display: flex;
+    flex-direction: column; /* Stacks label on top of input */
+    gap: 10px; /* Space between "Last Name" label and the box */
+}
+
+.input-wrapper label {
+    display: block;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.kiosk-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    transition: 0.3s;
+    text-transform: uppercase; /* Authentic PNR look */
+    box-sizing: border-box;
+}
+.kiosk-input:focus {
+    border-color: #4facfe;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+}
+
+/* 3. Action Button */
+.kiosk-btn {
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    border: none;
+    padding: 15px 40px;
+    border-radius: 30px;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 5px 20px rgba(79, 172, 254, 0.4);
+}
+.kiosk-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(79, 172, 254, 0.6); }
+
+/* 4. Safety Notice (Authentic Touch) */
+.safety-notice {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+}
+.safety-notice i { font-size: 20px; color: #ff6b6b; }
+
+/* --- NEW LOGIN BUTTONS LAYOUT --- */
+
+/* 1. The Container (Puts them side-by-side) */
+.auth-buttons-container {
+    display: flex;
+    justify-content: center; /* Center them */
+    align-items: center;
+    gap: 15px; /* Space between the two buttons */
+    margin-top: 15px;
+}
+
+/* 2. The New "Return to Base" Button Style */
+.btn-home {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    text-decoration: none;
+    
+    /* THEME: Transparent Blue "Ghost" Button */
+    background: transparent;
+    border: 1px solid #4facfe; 
+    color: #4facfe;
+    
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect for Return Button */
+.btn-home:hover {
+    background: rgba(79, 172, 254, 0.15); /* Subtle glow */
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
+    transform: translateY(-2px);
+}
+
+/* 3. Tweak existing Register button (Optional, keeps them same size) */
+.btn-register {
+    /* Ensure it aligns perfectly with the new button */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 30px;
+    /* Your existing styles for color/bg apply here */
+}
