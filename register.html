@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Kapitthavaja</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="register.js"></script> 
+</head>
+<body>
+    <div class="brand-section" style="margin-bottom: 20px;">
+        <h2 class="intro-text" style="font-size: 14px; letter-spacing: 4px;">THE SKY IS CALLING</h2>
+        <h1 class="mega-brand" style="font-size: 50px;">COME FLY WITH US</h1>
+    </div>
+
+    <div class="register-container">
+        
+        <div id="successMessage" class="success-box" style="display:none;">
+            <h3>Registration Successful!</h3>
+
+            <p style="margin-bottom: 10px;">
+                Your User ID: <strong id="showUserId" style="color: #4facfe;"></strong>
+            </p>
+
+            <p style="margin-bottom: 5px;">Your Password:</p>
+
+            <div class="password-wrapper" style="width: 200px; margin: 0 auto 20px auto;">
+                <input type="password" id="finalPassword" readonly 
+                    style="background-color: #ffffff !important; color: #000000 !important; border: 1px solid #ccc; padding: 5px;">
+
+                <i class='bx bx-hide toggle-icon' id="successPassIcon" onclick="togglePassword('finalPassword', 'successPassIcon')"></i>
+            </div>
+
+            <a href="javascript:void(0);" onclick="goToLogin()" class="btn-small" style="text-decoration: underline; color: #4facfe; cursor: pointer;">Go to Login</a>
+        </div>
+
+        <form id="regForm" onsubmit="event.preventDefault(); validateAndRegister();">
+            
+            <div class="form-row">
+                <div class="input-box">
+                    <label class="field-label">First Name</label> 
+                    <i class='bx bxs-user'></i>
+                    <input type="text" id="fname" placeholder="First Name">
+                </div>
+                <div class="input-box">
+                    <label class="field-label">Last Name</label>
+                    <i class='bx bxs-user-detail'></i>
+                    <input type="text" id="lname" placeholder="Last Name">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-box">
+                    <label class="field-label">D.O.B.</label>
+                    <i class='bx bxs-calendar'></i>
+                    <input type="date" id="dob" title="Date of Birth" onfocus="this.max=new Date().toISOString().split('T')[0]" required>
+                </div>
+                <div class="input-box">
+                    <label class="field-label">Mob No. (10 digits)</label>
+                    <i class='bx bxs-phone'></i>
+                    <input type="number" id="contact" placeholder="Mobile Number">
+                </div>
+            </div>
+
+            <div class="input-box">
+                <label class="field-label">Email ID</label>
+                <i class='bx bxs-envelope'></i>
+                <input type="email" id="email" placeholder="Email ID (e.g. user@gmail.com)">
+            </div>
+
+            <div class="input-box">
+                <label class="field-label">Address</label>
+                <i class='bx bxs-map'></i>
+                <input type="text" id="address" placeholder="Residential Address">
+            </div>
+
+            <div class="input-box">
+                <label class="field-label">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="pass" placeholder="Create Password" minlength="6" maxlength="30" required>
+                    <i class='bx bx-hide toggle-icon' id="regPassIcon" onclick="togglePassword('pass', 'regPassIcon')"></i>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn">Register</button>
+                <button type="button" class="btn btn-secondary" onclick="confirmReset()">Reset</button>
+            </div>
+
+            <div class="register-link">
+                <p>Already a member? <a href="javascript:void(0);" onclick="goToLogin()" class="btn-text">Login Here</a></p>
+            </div>
+
+        </form>
+    </div>
+    <div id="customAlert" class="custom-alert-overlay" style="display: none;">
+        <div class="custom-alert-box">
+            <div class="alert-icon">
+                <i class='bx bxs-bell-ring'></i>
+            </div>
+            <h3 id="alertTitle">ATTENTION CAPTAIN</h3>
+            <p id="alertMessage">Message goes here...</p>
+            <button onclick="closeCustomAlert()">ROGER THAT</button>
+        </div>
+    </div>
+
+</body>
+</html>

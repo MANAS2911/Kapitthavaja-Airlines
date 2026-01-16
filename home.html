@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        // Check if user is NOT logged in
+        if (!localStorage.getItem('currentUser')) {
+            // If no user found, force them back to login page
+            // .replace() prevents them from hitting "Back" to return here
+            window.location.replace("login.html");
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapitthavaja Airlines Dashboard</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <script>
+        // --- 1. NAVIGATION LOGIC ---
+        function showSection(sectionId) {
+            console.log("Button Clicked! Attempting to show:", sectionId); // Debug Message
+
+            // 1. Hide all sections first
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(div => {
+                div.classList.remove('active-section');
+                div.style.display = "none"; // Fallback to inline style just in case
+            });
+
+            // 2. Show the target section
+            const target = document.getElementById(sectionId);
+            if (target) {
+                target.style.display = "flex"; // Force show immediately
+                // Small delay to let the browser catch up before adding animation
+                setTimeout(() => {
+                    target.classList.add('active-section');
+                }, 10);
+            } else {
+                console.error("ERROR: Could not find section with ID:", sectionId);
+            }
+
+            // 3. Navbar Logic (Optional - keeps dashboard button lit)
+            document.querySelectorAll('.nav-links button').forEach(btn => btn.classList.remove('active-btn'));
+            
+            // If on sub-pages, keep Home button lit
+            if (['home', 'book-flight', 'checkin-section', 'offers'].includes(sectionId)) {
+                const homeBtn = document.querySelector("button[onclick=\"showSection('home')\"]");
+                if(homeBtn) homeBtn.classList.add('active-btn');
+            }
+        }
+
+        function logout() {
+            if(confirm("Are you sure you want to sign out?")) {
+                localStorage.removeItem('currentUser');
+                window.location.replace("login.html");
+            }
+        }
+
+        // --- 2. US007: SEARCH & DROPDOWN LOGIC ---
+        function toggleDropdown(listId, event) {
+            // 1. STOP the click from reaching the "Window" listener
+            // This prevents the menu from closing instantly!
+            if(event) {
+                event.stopPropagation();
+            }
+
+            const list = document.getElementById(listId);
+            if (list) {
+                const container = list.parentElement; // The .custom-dropdown div
+        
+                // Close ALL other open dropdowns first (optional, keeps it clean)
+                document.querySelectorAll('.custom-dropdown').forEach(d => {
+                    if(d !== container) d.classList.remove('active');
+                });
+
+                // Toggle THIS one
+                container.classList.toggle('active');
+    }
+}
+
+        function selectOption(displayId, value, listId) {
+            document.getElementById(displayId).innerText = value;
+            document.getElementById(displayId).style.color = "white"; 
+            document.getElementById(listId).classList.remove("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-btn') && !event.target.matches('.dropdown-btn *')) {
+                document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
+            }
+        }
+
+        function validateSearch() {
+            const origin = document.getElementById('originText').innerText;
+            const destination = document.getElementById('destText').innerText;
+            const dateVal = document.getElementById('deptDate').value;
+            const travellers = document.getElementById('travellers').value;
+            
+            // ... (Keep your existing validation checks here) ...
+            if (origin.includes("Select Origin")) { showAlert("Error: Please select an Origin city."); return; }
+            if (destination.includes("Select Destination")) { showAlert("Error: Please select a Destination city."); return; }
+            if (!dateVal) { showAlert("Error: Please select a Departure Date."); return; }
+            if (!travellers || travellers < 1) { showAlert("Error: Enter at least 1 traveller."); return; }
+            if (origin === destination) { showAlert("Error: Origin and Destination cannot be the same!"); return; }
+
+            const selectedDate = new Date(dateVal);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            if (selectedDate < today) { showAlert("Error: You cannot select a past date."); return; }
+
+            // Show Mock Results
+            document.getElementById('searchFormSection').style.display = 'none';
+            document.getElementById('searchResultsSection').style.display = 'block';
+            
+            const resultsDiv = document.getElementById('resultsList');
+            
+            // --- UPDATED HTML GENERATION ---
+            resultsDiv.innerHTML = `
+                <div class="flight-result-card">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route">
+                            <h1>${origin.substring(0,3).toUpperCase()}</h1> 
+                            <i class='bx bxs-plane'></i> 
+                            <h1>${destination.substring(0,3).toUpperCase()}</h1>
+                        </div>
+                        <div class="flight-details">
+                            <div><span>FLIGHT</span><br>KV-101</div>
+                            <div><span>DATE</span><br>${dateVal}</div>
+                            <div><span>TIME</span><br>06:00 PM</div>
+                        </div>
+                    </div>
+                    <div class="pass-right">
+                        <div class="seat-info">
+                            <span>PRICE</span>
+                            <h1>₹6,000</h1>
+                        </div>
+                        <button onclick="showAlert('Booking Confirmed!', true)" class="btn" style="margin-top:10px; width:auto; padding: 5px 15px; background:white; color:#4facfe;">BOOK</button>
+                    </div>
+                </div>
+
+                <div class="flight-result-card">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route">
+                            <h1>${origin.substring(0,3).toUpperCase()}</h1> 
+                            <i class='bx bxs-plane'></i> 
+                            <h1>${destination.substring(0,3).toUpperCase()}</h1>
+                        </div>
+                        <div class="flight-details">
+                            <div><span>FLIGHT</span><br>KV-504</div>
+                            <div><span>DATE</span><br>${dateVal}</div>
+                            <div><span>TIME</span><br>08:30 PM</div>
+                        </div>
+                    </div>
+                    <div class="pass-right">
+                        <div class="seat-info">
+                            <span>PRICE</span>
+                            <h1>₹7,500</h1>
+                        </div>
+                        <button onclick="showAlert('Booking Confirmed!')" class="btn" style="margin-top:10px; width:auto; padding: 5px 15px; background:white; color:#4facfe;">BOOK</button>
+                    </div>
+                </div>
+
+                <div class="flight-result-card">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route">
+                            <h1>${origin.substring(0,3).toUpperCase()}</h1> 
+                            <i class='bx bxs-plane'></i> 
+                            <h1>${destination.substring(0,3).toUpperCase()}</h1>
+                        </div>
+                        <div class="flight-details">
+                            <div><span>FLIGHT</span><br>KV-709</div>
+                            <div><span>DATE</span><br>${dateVal}</div>
+                            <div><span>TIME</span><br>11:00 PM</div>
+                        </div>
+                    </div>
+                    <div class="pass-right">
+                        <div class="seat-info">
+                            <span>PRICE</span>
+                            <h1>₹11,000</h1>
+                        </div>
+                        <button onclick="showAlert('Booking Confirmed!')" class="btn" style="margin-top:10px; width:auto; padding: 5px 15px; background:white; color:#4facfe;">BOOK</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function backToSearch() {
+            document.getElementById('searchFormSection').style.display = 'block';
+            document.getElementById('searchResultsSection').style.display = 'none';
+        }
+
+        // --- 3. TRIP TABS LOGIC ---
+        function filterTrips(status) {
+            document.querySelectorAll('.trip-list').forEach(div => div.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+            
+            // Use flex to keep horizontal layout
+            document.getElementById(status).style.display = 'flex'; 
+            event.currentTarget.classList.add('active-tab');
+        }
+
+        // --- PROFILE EDIT LOGIC ---
+        // --- PROFILE EDIT & SAVE LOGIC (Strict Rules) ---
+        function enableEdit() {
+            const ids = ['dispName', 'dispEmail', 'dispDob', 'dispContact'];
+            ids.forEach(id => {
+                const element = document.getElementById(id);
+                element.contentEditable = "true";
+                element.classList.add('editable-field'); 
+            });
+            document.getElementById('dispName').focus();
+            showAlert("EDIT MODE: Click on any detail to change it.");
+        }
+
+        function saveProfile() {
+            // 1. Capture the new values
+            const newName = document.getElementById('dispName').innerText.trim();
+            const newEmail = document.getElementById('dispEmail').innerText.trim();
+            const newDob = document.getElementById('dispDob').innerText.trim(); 
+            const newContact = document.getElementById('dispContact').innerText.trim();
+
+            // --- 2. VALIDATION RULES ---
+
+            // --- RULE A: NAME (SMART HEURISTICS) ---
+            const nameRegex = /^[A-Za-z\s]+$/;
+            if (!nameRegex.test(newName)) {
+                showAlert("ERROR: Name must contain only alphabets.");
+                return;
+            }
+
+            // Split name into parts to check each word
+            const nameParts = newName.split(" ").filter(part => part.length > 0);
+            
+            // 1. Min Length
+            if (newName.length < 3) {
+                showAlert("ERROR: Name is too short. Please enter your full name.");
+                return;
+            }
+
+            // 2. Junk Words List
+            const junkWords = ['test', 'demo', 'admin', 'user', 'fart', 'stupid', 'dummy', 'abcd', 'xyz', 'qwer', 'asdf', 'none', 'null'];
+            
+            for (let part of nameParts) {
+                // Check for Junk Words
+                if (junkWords.includes(part.toLowerCase())) {
+                    showAlert("ERROR: '" + part + "' is not a valid name. Please enter your real name.");
+                    return;
+                }
+                // Check for Repeating Characters (e.g., "tttt", "aaaa") - 3 times in a row
+                if (/(.)\1\1/.test(part)) {
+                    showAlert("ERROR: Name looks fake (too many repeating characters like '" + part + "').");
+                    return;
+                }
+                // Check for Consonant Smashes (e.g., "trrrrq" - no vowels for 5 chars)
+                if (/[bcdfghjklmnpqrstvwxyz]{5,}/i.test(part)) {
+                    showAlert("ERROR: Name looks unpronounceable (" + part + ").");
+                    return;
+                }
+            }
+
+            // --- RULE B: CONTACT (Strict India Mobile) ---
+            const phoneRegex = /^[6-9]\d{9}$/;
+            if (!phoneRegex.test(newContact)) {
+                showAlert("ERROR: Invalid Contact! Must be 10 digits and start with 6, 7, 8, or 9.");
+                return;
+            }
+            // Block repeating numbers like 9999999999
+            if (/(.)\1{5,}/.test(newContact)) {
+                showAlert("ERROR: Contact number cannot be just repeating digits.");
+                return;
+            }
+
+            // --- RULE C: EMAIL ---
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(newEmail)) {
+                showAlert("ERROR: Invalid Email ID! (Example: user@gmail.com)");
+                return;
+            }
+
+            // --- RULE D: DATE (18+ & > 1924) ---
+            const inputDate = new Date(newDob);
+            const today = new Date();
+            const minDate = new Date('1924-01-01');
+            today.setHours(0,0,0,0);
+
+            if (isNaN(inputDate.getTime())) {
+                showAlert("ERROR: Invalid Date Format! Please use YYYY-MM-DD.");
+                return;
+            }
+            if (inputDate <= minDate) {
+                showAlert("ERROR: Date must be after 01-01-1924.");
+                return;
+            }
+            if (inputDate > today) {
+                showAlert("ERROR: Date of Birth cannot be in the future!");
+                return;
+            }
+
+            // Age Check (18+)
+            let age = today.getFullYear() - inputDate.getFullYear();
+            const monthDiff = today.getMonth() - inputDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < inputDate.getDate())) {
+                age--;
+            }
+            if (age < 18) {
+                showAlert("ERROR: You must be at least 18 years old. (Calculated Age: " + age + ")");
+                return;
+            }
+
+            // --- 3. SAVE TO STORAGE ---
+            const currentUser = JSON.parse(localStorage.getItem('registeredUser')) || {};
+            
+            currentUser.firstName = nameParts[0];
+            currentUser.lastName = nameParts.slice(1).join(" ");
+            currentUser.email = newEmail;
+            currentUser.dob = newDob;
+            currentUser.contact = newContact;
+
+            localStorage.setItem('registeredUser', JSON.stringify(currentUser));
+            
+            // Update Welcome Message Immediately
+            document.getElementById('welcomeMsg').innerText = "Captain " + currentUser.firstName;
+            
+            showAlert("SUCCESS: Profile Updated!");
+
+            // Turn off Edit Mode
+            const ids = ['dispName', 'dispEmail', 'dispDob', 'dispContact'];
+            ids.forEach(id => {
+                const element = document.getElementById(id);
+                element.contentEditable = "false";
+                element.classList.remove('editable-field');
+            });
+        }
+
+        // --- 4. ONLOAD: LOAD USER & PROFILE DATA ---
+        window.onload = function() {
+            const user = localStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = "login.html";
+            } else {
+                // Set Welcome Message
+                document.getElementById('welcomeMsg').innerText = "Captain " + user;
+                
+                // RESTORED: Load Profile Data
+                const storedData = localStorage.getItem('registeredUser');
+                if (storedData) {
+                    const data = JSON.parse(storedData);
+
+                    if (document.getElementById('headerUserName')) {
+                        document.getElementById('headerUserName').innerText = "Welcome " + data.firstName + " !!!";
+                    }
+                    // Check if elements exist before setting (safety check)
+                    if(document.getElementById('dispName')) document.getElementById('dispName').innerText = data.firstName + " " + data.lastName;
+                    if(document.getElementById('dispEmail')) document.getElementById('dispEmail').innerText = data.email;
+                    if(document.getElementById('dispDob')) document.getElementById('dispDob').innerText = data.dob;
+                    if(document.getElementById('dispContact')) document.getElementById('dispContact').innerText = data.contact;
+                }
+            }
+        };
+    </script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo"><i class='bx bxs-plane-alt'></i> Kapitthavaja Airlines</div>
+        <div class="nav-links">
+            <button onclick="showSection('home')" class="active-btn">Dashboard</button>
+            <button onclick="showSection('profile')">My Passport</button>
+            <button onclick="showSection('trips')">Boarding Passes</button>
+            <button onclick="logout()" class="logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <div class="main-content">
+
+        <header class="dashboard-header">
+            <div class="user-profile-box">
+                <div class="user-details">
+                    <span class="header-name" id="headerUserName">Loading...</span>
+                    <span class="header-status">Gold Tier | 52,000 Miles</span>
+                </div>
+                <i class='bx bxs-user-circle header-icon'></i>
+            </div>
+        </header>
+
+        <div id="home" class="content-section active-section">
+            <h1 id="welcomeMsg" class="welcome-title">Welcome Captain!</h1>
+            <p class="subtitle">Ready for your next adventure?</p>
+            
+            <div class="dashboard-grid">
+                <div class="card" onclick="showSection('book-flight')">
+                    <i class='bx bxs-plane-take-off'></i>
+                    <h3>Book Flight</h3>
+                    <p>Search destinations</p>
+                </div>
+                <div class="card" onclick="showSection('checkin-section')">
+                    <i class='bx bxs-calendar-check'></i>
+                    <h3>Check-In</h3>
+                    <p>Get your seat</p>
+                </div>
+                <div class="card" onclick="openFlightStatus(); ; openTrackFlight()">
+                    <i class='bx bx-radar' style="font-size: 40px; color: #4facfe; margin-bottom: 10px;"></i>
+                    <h3>Flight Status</h3>
+                    <p>Track your flight</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="book-flight" class="content-section" style="display:none;">
+            <div id="searchFormSection">
+                <h2 class="section-title">Find Your Flight</h2>
+                <div class="register-container" style="margin: 0 auto; width: 500px;">
+                    <form onsubmit="event.preventDefault(); validateSearch();">
+                        
+                        <div class="input-box" style="position: relative; z-index: 60;>
+                            <label style="font-size:12px; color:#4facfe; margin-left:15px;">ORIGIN</label>
+                            <div class="custom-dropdown">
+                                <div class="dropdown-btn" onclick="toggleDropdown('originList')">
+                                    <span id="originText">Select Origin</span> <i class='bx bxs-chevron-down'></i>
+                                </div>
+                                <div id="originList" class="dropdown-content">
+                                    <div onclick="selectOption('originText', 'Mumbai', 'originList')">Mumbai</div>
+                                    <div onclick="selectOption('originText', 'Delhi', 'originList')">Delhi</div>
+                                    <div onclick="selectOption('originText', 'Bangalore', 'originList')">Bangalore</div>
+                                    <div onclick="selectOption('originText', 'Chennai', 'originList')">Chennai</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-box" style="position: relative; z-index: 50;">
+                            <label style="font-size:12px; color:#4facfe; margin-left:15px;">DESTINATION</label>
+                            <div class="custom-dropdown">
+                                <div class="dropdown-btn" onclick="toggleDropdown('destList')">
+                                    <span id="destText">Select Destination</span> <i class='bx bxs-chevron-down'></i>
+                                </div>
+                                <div id="destList" class="dropdown-content">
+                                    <div onclick="selectOption('destText', 'New York', 'destList')">New York</div>
+                                    <div onclick="selectOption('destText', 'London', 'destList')">London</div>
+                                    <div onclick="selectOption('destText', 'Dubai', 'destList')">Dubai</div>
+                                    <div onclick="selectOption('destText', 'Paris', 'destList')">Paris</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="input-box" style="position: relative; z-index: 40;>
+                                <label style="font-size:12px; color:#4facfe; margin-left:15px;">DATE</label>
+                                <input type="date" id="deptDate" style="padding-left:20px;">
+                            </div>
+                            <div class="input-box" style="position: relative; z-index: 30;>
+                                <label style="font-size:12px; color:#4facfe; margin-left:15px;">TRAVELLERS</label>
+                                <input type="number" id="travellers" placeholder="1" min="1" max="10"value="1" style="padding-left:20px;" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group" style="position: relative; z-index: 20;">
+                            <label>Class</label>
+                            
+                            <div class="custom-dropdown" id="class-dropdown">
+                                
+                                <div class="dropdown-trigger" onclick="toggleDropdown('class-options-list', event)">
+                                    <span id="selected-class-text">Economy</span>
+                                    <i class='bx bx-chevron-down' style="font-size: 20px; color: #4facfe;"></i>
+                                </div>
+
+                                <div class="dropdown-options" id="class-options-list">
+                                    <div class="option-item" onclick="selectClass('Economy')">
+                                        <span class="class-name">Economy</span>
+                                        <span class="class-desc">Standard comfort</span>
+                                    </div>
+                                    <div class="option-item" onclick="selectClass('Premium Economy')">
+                                        <span class="class-name">Premium Economy</span>
+                                        <span class="class-desc">More legroom</span>
+                                    </div>
+                                    <div class="option-item" onclick="selectClass('Business')">
+                                        <span class="class-name">Business</span>
+                                        <span class="class-desc">Lie-flat seats</span>
+                                    </div>
+                                    <div class="option-item" onclick="selectClass('First Class')">
+                                        <span class="class-name">First Class</span>
+                                        <span class="class-desc">Private suite</span>
+                                    </div>
+                                </div>
+                                
+                                <input type="hidden" id="class-input" name="flight_class" value="Economy">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn" style="margin-top:20px;">Search Flights</button>
+                        <div style="height: 250px; width: 100%;"></div>
+                    </form>
+                </div>
+                <div id="searchResultsContainer" style="display: none; margin-top: 30px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px;">
+    
+                    <h3 style="color: white; text-align: center;">Available Flights</h3>
+    
+                    <table style="width: 100%; border-collapse: collapse; color: white; margin-top: 15px;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid rgba(255,255,255,0.3);">
+                                <th style="padding: 10px; text-align: left;">Flight ID</th>
+                                <th style="padding: 10px; text-align: left;">No Of Seats</th>
+                                <th style="padding: 10px; text-align: left;">Seat Category</th>
+                                <th style="padding: 10px; text-align: left;">Travel Date</th>
+                                <th style="padding: 10px; text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchResultsBody">
+                            </tbody>
+                    </table>
+
+                </div>
+
+                <div id="bookingSuccessMsg" style="display:none; position: fixed; top: 20px; right: 20px; background: #43e97b; color: black; padding: 15px 25px; border-radius: 5px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1000;">
+                    </div>
+            </div>
+
+            <div id="searchResultsSection" style="display:none;">
+                <h2 class="section-title">Available Flights</h2>
+                <div id="resultsList" style="width: 100%; max-width: 1200px; margin: 0 auto;"></div>
+                <button onclick="backToSearch()" class="btn-secondary" style="margin-top:20px; padding:10px 20px; border-radius:30px;">Back to Search</button>
+            </div>
+        </div>
+
+        <div id="checkin-section" class="content-section" style="display: none;">
+    
+            <div class="section-header">
+                <h2 class="section-title">Web <span class="highlight">Check-In</span></h2>
+                <p class="section-subtitle">Select your seat and get your digital boarding pass.</p>
+            </div>
+
+            <div class="checkin-kiosk-container">
+    
+                <div class="kiosk-progress">
+                    <div class="step active" id="progress-step-1">
+                        <div class="step-circle">1</div>
+                        <span>Identify</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" id="progress-step-2">
+                        <div class="step-circle">2</div>
+                        <span>Seat</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" id="progress-step-3">
+                        <div class="step-circle">3</div>
+                        <span>Boarding Pass</span>
+                    </div>
+                </div>
+
+                <div id="step1-identify" class="step-content">
+                    <div class="kiosk-form-box">
+                        <h3>Retrieve Booking</h3>
+                        <div class="form-row">
+                            <div class="input-wrapper">
+                                <label>Booking Reference (PNR)</label>
+                                <input type="text" id="ci-pnr" placeholder="e.g. KV-882" class="kiosk-input" value="KPT882">
+                            </div>
+                            <div class="input-wrapper">
+                                <label>Last Name</label>
+                                <input type="text" id="ci-name" placeholder="e.g. Choudhary" class="kiosk-input">
+                            </div>
+                        </div>
+                        <button class="kiosk-btn" onclick="goToStep2()">
+                            Find Flight <i class='bx bx-right-arrow-alt'></i>
+                        </button>
+                    </div>
+                    <div class="safety-notice">
+                        <i class='bx bx-error-circle'></i>
+                        <p><strong>Safety Declaration:</strong> Ensure you are not carrying prohibited items like lithium batteries, explosives, or flammable liquids.</p>
+                    </div>
+                </div>
+
+                <div id="step2-seat" class="step-content" style="display: none;">
+                    
+                    <div style="text-align: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px;">
+                        <h2 style="color: white; margin: 0;">MUMBAI <i class='bx bxs-plane-alt' style="color:#4facfe;"></i> LONDON</h2>
+                        <p style="color: #888; font-size: 14px; margin-top: 5px;">Flight KPT882 • Boeing 787 Dreamliner</p>
+                    </div>
+
+                    <div class="seat-selection-area">
+                        <div class="plane-body">
+                            <div class="cockpit"></div>
+                            <div class="cabin-grid" id="seat-map-grid">
+                                </div>
+                        </div>
+
+                        <div class="seat-info-panel">
+                            <h4>Seat Legend</h4>
+                            <div class="legend-row"><div class="seat-icon available"></div> Available</div>
+                            <div class="legend-row"><div class="seat-icon occupied"></div> Occupied</div>
+                            <div class="legend-row"><div class="seat-icon selected"></div> Selected</div>
+                            
+                            <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+                            
+                            <div class="selected-seat-box">
+                                <span>SEAT</span>
+                                <h1 id="display-selected-seat">--</h1>
+                            </div>
+                            
+                            <button class="kiosk-btn" onclick="confirmCheckIn()" style="width: 100%; margin-top: 20px;">
+                                Confirm Selection
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="step3-success" class="step-content" style="display: none; text-align: center; padding: 40px;">
+                    <div style="background: rgba(79, 172, 254, 0.1); padding: 40px; border-radius: 20px; display: inline-block;">
+                        <i class='bx bxs-check-circle' style="font-size: 80px; color: #4facfe; margin-bottom: 20px;"></i>
+                        <h2 style="color: white;">You are Checked In!</h2>
+                        <p style="color:#ccc; margin-bottom: 30px;">Your digital boarding pass has been generated and sent to your email.</p>
+                        <p style="color: #666; font-size: 13px;">(Please check your "Boarding Passes" tab to view it)</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="profile" class="content-section" style="display:none;">
+            <div class="passport-card">
+                <div class="passport-header">
+                    <i class='bx bxs-id-card'></i> OFFICIAL PASSENGER IDENTITY
+                </div>
+                <div class="passport-body">
+                    <div class="photo-area">
+                        <i class='bx bxs-user-circle' style="font-size: 100px; color: #4facfe;"></i>
+                        <p>Passenger</p>
+                    </div>
+                    <div class="details-area">
+                        <div class="detail-row">
+                            <span>Full Name:</span>
+                            <div id="dispName" class="data-field">Loading...</div>
+                        </div>
+                        <div class="detail-row">
+                            <span>Email ID:</span>
+                            <div id="dispEmail" class="data-field">Loading...</div>
+                        </div>
+                        <div class="detail-row">
+                            <span>Date of Birth:</span>
+                            <div id="dispDob" class="data-field">Loading...</div>
+                        </div>
+                        <div class="detail-row">
+                            <span>Contact No:</span>
+                            <div id="dispContact" class="data-field">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="passport-footer" style="padding: 20px; text-align: right; background: rgba(0,0,0,0.2);">
+                    <button onclick="enableEdit()" class="btn-action">Edit Details</button>
+                    <button onclick="saveProfile()" class="btn-action btn-save">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="trips" class="content-section" style="display:none;">
+            <h2 class="section-title">Flight Logbook</h2>
+
+            <div class="trip-tabs">
+                <button onclick="filterTrips('confirmed')" class="tab-btn active-tab">Confirmed</button>
+                <button onclick="filterTrips('cancelled')" class="tab-btn">Cancelled</button>
+                <button onclick="filterTrips('completed')" class="tab-btn">Completed</button>
+            </div>
+            
+            <div id="confirmed" class="trip-list">
+
+                <div class="boarding-pass">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route"><h1>BOM</h1> <i class='bx bxs-plane'></i> <h1>LHR</h1></div>
+                        <div class="flight-details">
+                            <div><span>FLIGHT</span><br>KV-909</div>
+                            <div><span>DATE</span><br>12 OCT 2026</div>
+                            <div><span>GATE</span><br>A4</div>
+                        </div>
+                    </div>
+                    <div class="pass-right">
+                        <div class="seat-info">
+                            <span>SEAT</span>
+                            <h1>4A</h1>
+                        </div>
+                        <div class="qr-area">
+                            <i class='bx bx-qr'></i>
+                            <span>KPT882</span>
+                        </div>
+                        <button class="cancel-btn" onclick="cancelFlight(this)">Cancel</button>
+                    </div>
+                </div> 
+
+                <div class="boarding-pass">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route"><h1>DEL</h1> <i class='bx bxs-plane'></i> <h1>NYC</h1></div>
+                        <div class="flight-details">
+                            <div><span>FLIGHT</span><br>KV-101</div>
+                            <div><span>DATE</span><br>15 NOV 2026</div>
+                            <div><span>GATE</span><br>B2</div>
+                        </div>
+                    </div>
+                    <div class="pass-right">
+                        <div class="seat-info">
+                            <span>SEAT</span>
+                            <h1>12C</h1>
+                        </div>
+                        <div class="qr-area">
+                            <i class='bx bx-qr'></i>
+                            <span>LHR77X</span>
+                        </div>
+                        <button class="cancel-btn" onclick="cancelFlight(this)">Cancel</button>
+                    </div>
+                </div> 
+
+                <div class="boarding-pass">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route"><h1>BLR</h1> <i class='bx bxs-plane'></i> <h1>DXB</h1></div>
+                        <div class="flight-details">
+                            <div><span>FLIGHT</span><br>KV-303</div>
+                            <div><span>DATE</span><br>20 MAR 2026</div>
+                            <div><span>GATE</span><br>C1</div>
+                        </div>
+                    </div>
+                    <div class="pass-right">
+                        <div class="seat-info">
+                            <span>SEAT</span>
+                            <h1>1F</h1>
+                        </div>
+                        <div class="qr-area">
+                            <i class='bx bx-qr'></i>
+                            <span>DXB99Z</span>
+                        </div>
+                        <button class="cancel-btn" onclick="cancelFlight(this)">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cancelled" class="trip-list" style="display:none;">
+                <div class="boarding-pass cancelled-pass">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route"><h1>DEL</h1> <i class='bx bxs-plane'></i> <h1>PNQ</h1></div>
+                        <div class="flight-details"><div><span>FLIGHT</span><br>KV-001</div><div><span>DATE</span><br>10 DEC 2023</div><div><span>STATUS</span><br><b style="color:red;">CANCELLED</b></div></div>
+                    </div>
+                    <div class="pass-right" style="background-color: #ff4b4b;">
+                        <div class="seat-info"><span>PNR</span><h1>REF</h1></div>
+                        <div class="qr-area"><i class='bx bx-qr'></i><span>CAN001</span></div>
+                        <span style="font-size:10px; margin-top:5px; font-weight:bold;">REFUNDED</span>
+                    </div>
+                </div>
+
+                <div class="boarding-pass cancelled-pass">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route"><h1>BOM</h1> <i class='bx bxs-plane'></i> <h1>GOA</h1></div>
+                        <div class="flight-details"><div><span>FLIGHT</span><br>KV-002</div><div><span>DATE</span><br>05 NOV 2024</div><div><span>STATUS</span><br><b style="color:red;">CANCELLED</b></div></div>
+                    </div>
+                    <div class="pass-right" style="background-color: #ff4b4b;">
+                        <div class="seat-info"><span>PNR</span><h1>REF</h1></div>
+                        <div class="qr-area"><i class='bx bx-qr'></i><span>GOA552</span></div>
+                        <span style="font-size:10px; margin-top:5px; font-weight:bold;">REFUNDED</span>
+                    </div>
+                </div>
+
+                <div class="boarding-pass cancelled-pass">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route"><h1>MAA</h1> <i class='bx bxs-plane'></i> <h1>HYD</h1></div>
+                        <div class="flight-details"><div><span>FLIGHT</span><br>KV-003</div><div><span>DATE</span><br>01 OCT 2025</div><div><span>STATUS</span><br><b style="color:red;">CANCELLED</b></div></div>
+                    </div>
+                    <div class="pass-right" style="background-color: #ff4b4b;">
+                        <div class="seat-info"><span>PNR</span><h1>OPS</h1></div>
+                        <div class="qr-area"><i class='bx bx-qr'></i><span>HYD404</span></div>
+                        <span style="font-size:10px; margin-top:5px; font-weight:bold;">OPERATOR</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="completed" class="trip-list" style="display:none;">
+                <div class="boarding-pass completed-pass">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route"><h1>LHR</h1> <i class='bx bxs-plane'></i> <h1>BOM</h1></div>
+                        <div class="flight-details"><div><span>FLIGHT</span><br>KV-777</div><div><span>DATE</span><br>15 AUG 2023</div><div><span>STATUS</span><br><b style="color:green;">LANDED</b></div></div>
+                    </div>
+                    <div class="pass-right" style="background-color: #33f906;">
+                        <div class="seat-info"><span>SEAT</span><h1>3A</h1></div>
+                        <div class="qr-area"><i class='bx bx-qr'></i><span>OLD777</span></div>
+                        <i class='bx bxs-check-circle' style="font-size: 20px; color:white; margin-top:5px;"></i>
+                    </div>
+                </div>
+
+                <div class="boarding-pass completed-pass">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route"><h1>FRA</h1> <i class='bx bxs-plane'></i> <h1>DEL</h1></div>
+                        <div class="flight-details"><div><span>FLIGHT</span><br>KV-888</div><div><span>DATE</span><br>10 JUL 2024</div><div><span>STATUS</span><br><b style="color:green;">LANDED</b></div></div>
+                    </div>
+                    <div class="pass-right" style="background-color: #33f906;">
+                        <div class="seat-info"><span>SEAT</span><h1>11B</h1></div>
+                        <div class="qr-area"><i class='bx bx-qr'></i><span>OLD888</span></div>
+                        <i class='bx bxs-check-circle' style="font-size: 20px; color:white; margin-top:5px;"></i>
+                    </div>
+                </div>
+
+                <div class="boarding-pass completed-pass">
+                    <div class="pass-left">
+                        <div class="airline-name">KAPITT. VIMAAN</div>
+                        <div class="flight-route"><h1>JFK</h1> <i class='bx bxs-plane'></i> <h1>BOM</h1></div>
+                        <div class="flight-details"><div><span>FLIGHT</span><br>KV-999</div><div><span>DATE</span><br>01 JUN 2025</div><div><span>STATUS</span><br><b style="color:green;">LANDED</b></div></div>
+                    </div>
+                    <div class="pass-right" style="background-color: #33f906;">
+                        <div class="seat-info"><span>SEAT</span><h1>2K</h1></div>
+                        <div class="qr-area"><i class='bx bx-qr'></i><span>OLD999</span></div>
+                        <i class='bx bxs-check-circle' style="font-size: 20px; color:white; margin-top:5px;"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="flightStatusModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <h2 style="margin-top: 0;">Track Flight</h2>
+        <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">
+            Enter flight number to see real-time status!
+        </p>
+
+        <input type="text" id="status-flight-num" placeholder="e.g. KV-882">
+
+        <button onclick="checkFlightStatus()">Check Status</button>
+
+        <div id="status-result" style="display: none; margin-top: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
+            <h3 id="status-text" style="margin: 0; font-size: 20px;">--</h3>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 14px; color: #aaa;">
+                <span id="status-route">--</span>
+                <span id="status-time">--</span>
+            </div>
+        </div>
+
+        <a href="javascript:void(0)" 
+            onclick="document.getElementById('flightStatusModal').style.display='none'" 
+            style="color: #888; text-decoration: underline; cursor: pointer; display: block; margin-top: 15px;">
+            Close
+        </a>
+    </div>
+</div>
+
+    <div id="customAlert" class="custom-alert-overlay" style="display: none;">
+    <div class="custom-alert-box">
+        <div class="alert-icon">
+            <i class='bx bxs-bell-ring'></i>
+        </div>
+        
+        <h3 id="alertTitle">ATTENTION CAPTAIN</h3>
+        
+        <p id="alertMessage" style="margin-bottom: 15px; color: #ccc;">Booking Confirmed!</p>
+
+        <div id="pnr-container" style="display: none; background: rgba(79, 172, 254, 0.1); padding: 15px; border-radius: 10px; border: 1px dashed #4facfe; margin: 10px 0;">
+            <span style="font-size: 11px; text-transform: uppercase; color: #888; letter-spacing: 1px;">Official PNR Code</span>
+            <h1 id="pnrDisplay" style="color: #4facfe; font-size: 32px; margin: 5px 0; font-family: monospace;">KPT882</h1>
+            <span style="font-size: 10px; color: #666;">(Memorize this for Web Check-In)</span>
+        </div>
+
+        <button onclick="closeCustomAlert()">ROGER THAT</button>
+    </div>
+    </div>
+    <footer class="dashboard-footer">
+        <div class="footer-container">
+
+            <div class="footer-col footer-left">
+                <h3>Kapitthavaja <span class="highlight">Airlines</span></h3>
+                <p class="alliance-tag">Star Alliance Member</p> <p class="copyright">&copy; 2026. All Rights Reserved.</p>
+            </div>
+
+            <div class="footer-col footer-center">
+                
+                <div class="footer-nav">
+                    <a href="#" onclick="showSection('book-flight')">Book Flight</a>
+                    <a href="#" onclick="showSection('trips')">My Trips</a>
+                    <a href="#" onclick="showSection('profile')">Profile</a>
+                    <a href="#" onclick="showSection('checkin-section')">Check-In</a>
+                </div>
+
+                <div class="footer-legal">
+                    <a href="#">Flight Status</a>
+                    <span class="separator">|</span>
+                    <a href="#">Baggage Rules</a>
+                    <span class="separator">|</span>
+                    <a href="#">Privacy Policy</a>
+                    <span class="separator">|</span>
+                    <a href="#">Conditions of Carriage</a>
+                </div>
+            </div>
+
+            <div class="footer-col footer-right">
+                <div class="support-box">
+                    <span class="support-label">Premium Concierge</span>
+                    <a href="mailto:concierge@kapitthavaja.com" style="color: white; text-decoration: none; font-size: 18px; font-weight: bold;">
+                        concierge@kapitthavaja.com
+                    </a> 
+                </div>
+                
+                <div class="social-icons">
+                    <a href="#"><i class='bx bxl-facebook-circle'></i></a>
+                    <a href="#"><i class='bx bxl-instagram-alt'></i></a>
+                    <a href="#"><i class='bx bxl-twitter'></i></a>
+                    <a href="#"><i class='bx bxl-linkedin-square'></i></a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <script src="home.js"></script>
+</body>
+</html>
